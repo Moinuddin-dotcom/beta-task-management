@@ -11,6 +11,7 @@ import {
   createTaskValidationSchema,
   updateTaskValidationSchema,
 } from "../validation/task.validation";
+import { AppError } from "../utils/AppError";
 
 export const createTaskController: RequestHandler = asyncHandler(
   async (req) => {
@@ -40,9 +41,12 @@ export const getTaskByIdController: RequestHandler = asyncHandler(
   async (req) => {
     const id = req.params.id;
     if (typeof id !== "string") {
-      throw new Error("Invalid task ID");
+      throw new AppError("Invalid task ID", 400);
     }
     const taskById = await getTaskByIdService(id);
+     if (!taskById) {
+    throw new AppError("Task not found", 404);
+  }
     return {
       statusCode: 200,
       success: true,
@@ -56,7 +60,7 @@ export const updateTaskController: RequestHandler = asyncHandler(
   async (req) => {
     const id = req.params.id;
     if (typeof id !== "string") {
-      throw new Error("Invalid task ID");
+      throw new AppError("Invalid task ID", 400);
     }
 
     const validatedData = updateTaskValidationSchema.parse(req.body);
@@ -75,7 +79,7 @@ export const deleteTaskController: RequestHandler = asyncHandler(
   async (req) => {
     const id = req.params.id;
     if (typeof id !== "string") {
-      throw new Error("Invalid task ID");
+      throw new AppError("Invalid task ID", 400);
     }
     const deletedTask = await deleteTaskService(id);
     return {

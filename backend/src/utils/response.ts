@@ -1,12 +1,12 @@
 import type { Response } from "express";
 
-interface TMeta {
+export interface TMeta {
   page: number;
   limit: number;
   total: number;
 }
 
-interface TResponse<T> {
+export interface TResponse<T> {
   statusCode: number;
   success: boolean;
   message: string;

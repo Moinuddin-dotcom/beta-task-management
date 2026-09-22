@@ -1,5 +1,6 @@
 import type { ErrorRequestHandler } from "express";
 import { ZodError } from "zod";
+import { Prisma } from "../generated/prisma/client";
 
 export const errorHandler: ErrorRequestHandler = (
   err,
@@ -16,6 +17,15 @@ export const errorHandler: ErrorRequestHandler = (
       errors: err.issues,
       data: null,
     });
+  }
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === "P2025") {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+        data: null,
+      });
+    }
   }
 
   const statusCode = err.statusCode || 500;

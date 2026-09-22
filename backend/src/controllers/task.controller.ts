@@ -65,6 +65,8 @@ export const updateTaskController: RequestHandler = asyncHandler(
 
     const validatedData = updateTaskValidationSchema.parse(req.body);
 
+    
+
     const updatedTask = await updateTaskService(id, validatedData);
     return {
       statusCode: 200,

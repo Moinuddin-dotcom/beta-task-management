@@ -1,9 +1,10 @@
-import Image from "next/image";
+import TaskBoard from "@/components/tasks/TaskBoard";
+
 
 export default function Home() {
   return (
-  <div>
-    Hey this is home page
-  </div>
+    <main>
+      <TaskBoard />
+    </main>
   );
 }

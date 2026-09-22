@@ -63,14 +63,16 @@ export default function CreateTaskDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button
-          type="button"
-          className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
-        >
-          + Create Task
-        </button>
-      </DialogTrigger>
+      <DialogTrigger
+  render={
+    <button
+      type="button"
+      className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+    />
+  }
+>
+  + Create Task
+</DialogTrigger>
 
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>

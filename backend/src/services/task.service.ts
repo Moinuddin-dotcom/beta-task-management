@@ -50,16 +50,91 @@ export const updateTaskService = async (
   id: string,
   data: UpdateTaskValidationInput,
 ) => {
-  return await prisma.task.update({
-    where: {
-      id,
-    },
-    data: {
-      ...(data.title !== undefined && { title: data.title }),
-      ...(data.description !== undefined && { description: data.description }),
-      ...(data.priority !== undefined && { priority: data.priority }),
-      ...(data.status !== undefined && { status: data.status }),
-    },
+  return await prisma.$transaction(async (tx) => {
+    const task = await tx.task.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!task) {
+      throw new AppError("Task not found", 404);
+    }
+
+    const isStatusChanging =
+      data.status !== undefined && data.status !== task.status;
+
+    if (!isStatusChanging) {
+      return await tx.task.update({
+        where: {
+          id,
+        },
+        data: {
+          ...(data.title !== undefined && { title: data.title }),
+          ...(data.description !== undefined && {
+            description: data.description,
+          }),
+          ...(data.priority !== undefined && {
+            priority: data.priority,
+          }),
+        },
+      });
+    }
+
+    const destinationStatus = data.status!;
+
+    const sourceTasks = await tx.task.findMany({
+      where: {
+        status: task.status,
+        id: {
+          not: task.id,
+        },
+      },
+      orderBy: {
+        position: "asc",
+      },
+    });
+
+    const destinationTasks = await tx.task.findMany({
+      where: {
+        status: destinationStatus,
+      },
+      orderBy: {
+        position: "asc",
+      },
+    });
+
+    await Promise.all(
+      sourceTasks.map((item, index) =>
+        tx.task.update({
+          where: {
+            id: item.id,
+          },
+          data: {
+            position: index,
+          },
+        }),
+      ),
+    );
+
+    const updatedTask = await tx.task.update({
+      where: {
+        id: task.id,
+      },
+      data: {
+        ...(data.title !== undefined && { title: data.title }),
+        ...(data.description !== undefined && {
+          description: data.description,
+        }),
+        ...(data.priority !== undefined && {
+          priority: data.priority,
+        }),
+        status: destinationStatus,
+        position: destinationTasks.length,
+      },
+    });
+
+    return updatedTask;
   });
 };
 

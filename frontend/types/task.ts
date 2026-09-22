@@ -8,6 +8,7 @@ export interface Task {
   description: string;
   priority: Priority;
   status: TaskStatus;
+  position: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -20,3 +21,9 @@ export interface CreateTaskInput {
 }
 
 export type UpdateTaskInput = Partial<CreateTaskInput>;
+
+export interface ReorderTaskInput {
+  taskId: string;
+  destinationStatus: TaskStatus;
+  destinationPosition: number;
+}

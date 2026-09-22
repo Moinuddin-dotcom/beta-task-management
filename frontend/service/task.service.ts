@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axios";
-import type { CreateTaskInput, Task, UpdateTaskInput } from "@/types/task";
+import type { CreateTaskInput, ReorderTaskInput, Task, UpdateTaskInput } from "@/types/task";
 
 
 export const createTask = async(data: CreateTaskInput): Promise<Task> => {
@@ -30,4 +30,11 @@ export const deleteTask = async (id: string): Promise<Task> => {
 }
 
 
+
+export const reorderTask = async (
+  data: ReorderTaskInput,
+): Promise<Task> => {
+  const res = await axiosInstance.patch("/tasks/reorder", data);
+  return res.data.data;
+};
 

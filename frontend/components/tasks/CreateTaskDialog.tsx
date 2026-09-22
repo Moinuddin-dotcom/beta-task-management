@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const createTaskSchema = z.object({
   title: z
@@ -50,8 +51,12 @@ export default function CreateTaskDialog() {
   const onSubmit = (data: CreateTaskInput) => {
     createTaskMutation.mutate(data, {
       onSuccess: () => {
+        toast.success("Task created successfully");
         reset();
         setOpen(false);
+      },
+      onError: () => {
+        toast.error("Failed to create task");
       },
     });
   };

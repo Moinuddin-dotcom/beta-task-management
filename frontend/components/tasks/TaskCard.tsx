@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Task } from "@/types/task";
 import EditTaskDialog from "./EditTaskDialog";
+import DeleteTaskDialog from "./DeleteTaskDialog";
 
 const priorityStyles = {
   LOW: "bg-emerald-50 text-emerald-700",
@@ -20,6 +21,7 @@ const formatDate = (date: string) => {
 
 export default function TaskCard({ task }: { task: Task }) {
   const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   return (
     <>
@@ -45,13 +47,23 @@ export default function TaskCard({ task }: { task: Task }) {
             Created {formatDate(task.createdAt)}
           </p>
 
-          <button
-            type="button"
-            onClick={() => setEditOpen(true)}
-            className="text-xs font-medium text-slate-600 transition hover:text-slate-900"
-          >
-            Edit
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setEditOpen(true)}
+              className="text-xs font-medium text-slate-600 transition hover:text-slate-900"
+            >
+              Edit
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setDeleteOpen(true)}
+              className="text-xs font-medium text-red-500 transition hover:text-red-700"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </article>
 
@@ -59,6 +71,12 @@ export default function TaskCard({ task }: { task: Task }) {
         task={task}
         open={editOpen}
         onOpenChange={setEditOpen}
+      />
+
+      <DeleteTaskDialog
+        task={task}
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
       />
     </>
   );

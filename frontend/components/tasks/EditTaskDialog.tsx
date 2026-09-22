@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const editTaskSchema = z.object({
   title: z
@@ -74,7 +75,11 @@ export default function EditTaskDialog({
       },
       {
         onSuccess: () => {
+          toast.success("Task edited successfully");
           onOpenChange(false);
+        },
+        onError: () => {
+          toast.error("Failed to edit task");
         },
       },
     );

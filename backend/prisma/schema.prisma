@@ -3,8 +3,8 @@
 // }
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+    provider = "prisma-client"
+    output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -24,12 +24,12 @@ enum TaskStatus {
 }
 
 model Task {
-    id String @id @default(uuid()) 
-    title String
+    id          String     @id @default(uuid())
+    title       String
     description String
-    priority Priority
-    status TaskStatus
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    priority    Priority
+    status      TaskStatus
+    position    Int        @default(0)
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
 }
-

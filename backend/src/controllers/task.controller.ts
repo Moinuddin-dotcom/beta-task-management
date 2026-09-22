@@ -4,11 +4,13 @@ import {
   deleteTaskService,
   getAllTaskService,
   getTaskByIdService,
+  reorderTaskService,
   updateTaskService,
 } from "../services/task.service";
 import type { RequestHandler } from "express";
 import {
   createTaskValidationSchema,
+  reorderTaskValidationSchema,
   updateTaskValidationSchema,
 } from "../validation/task.validation";
 import { AppError } from "../utils/AppError";
@@ -89,6 +91,24 @@ export const deleteTaskController: RequestHandler = asyncHandler(
       success: true,
       message: "Task deleted successfully",
       data: deletedTask,
+    };
+  },
+);
+
+
+export const reorderTaskController: RequestHandler = asyncHandler(
+  async (req) => {
+    const validatedData = reorderTaskValidationSchema.parse(
+      req.body,
+    );
+
+    const task = await reorderTaskService(validatedData);
+
+    return {
+      statusCode: 200,
+      success: true,
+      message: "Task reordered successfully",
+      data: task,
     };
   },
 );
